@@ -39,8 +39,8 @@
                     <button type="submit" class="btn btn-primary">Masuk</button>
                 </div>
             </form>
-            <div class="mt-3 text-center text-muted" style="font-size: 12px;">
-                <p>Gunakan akun demo:<br>admin@kanpat.com | kasir@kanpat.com<br>Pass: password</p>
+            <div class="mt-3 d-grid">
+                <a href="{{ route('home') }}" class="btn btn-secondary">Kembali</a>
             </div>
         </div>
     </div>

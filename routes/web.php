@@ -49,4 +49,4 @@ Route::get('/order/success/{id}', [OrderController::class, 'success'])->name('or
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
