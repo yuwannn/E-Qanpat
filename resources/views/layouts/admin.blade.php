@@ -58,7 +58,7 @@
             <a href="{{ route('cashier.dashboard') }}" class="{{ request()->routeIs('cashier.*') ? 'active' : '' }}">
                 <i class="fas fa-cash-register me-2"></i> Dashboard Kasir
             </a>
-            <a href="#">
+            <a href="{{ route('riwayat.index') }}" class="{{ request()->routeIs('riwayat.*') ? 'active' : '' }}">
                 <i class="fas fa-history me-2"></i> Riwayat Transaksi
             </a>
         @endif
@@ -68,7 +68,7 @@
                 <i class="fas fa-home me-2"></i> Dashboard
             </a>
 
-            <div class="text-uppercase text-muted px-4 mt-3 mb-1" style="font-size: 12px;">Master Data</div>
+            {{-- <div class="text-uppercase text-muted px-4 mt-3 mb-1" style="font-size: 12px;">Master Data</div> --}}
 
             <a href="{{ route('kategori.index') }}" class="{{ request()->routeIs('kategori.*') ? 'active' : '' }}">
                 <i class="fas fa-tags me-2"></i> Kategori
@@ -79,14 +79,8 @@
             <a href="{{ route('meja.index') }}" class="{{ request()->routeIs('meja.*') ? 'active' : '' }}">
                 <i class="fas fa-chair me-2"></i> Meja
             </a>
-
-            <div class="text-uppercase text-muted px-4 mt-3 mb-1" style="font-size: 12px;">Admin</div>
-
-            <a href="#">
-                <i class="fas fa-users me-2"></i> Manajemen User
-            </a>
-            <a href="#">
-                <i class="fas fa-chart-line me-2"></i> Laporan
+            <a href="{{ route('riwayat.index') }}" class="{{ request()->routeIs('riwayat.*') ? 'active' : '' }}">
+                <i class="fas fa-file-invoice-dollar me-2"></i> Riwayat Transaksi
             </a>
         @endif
 

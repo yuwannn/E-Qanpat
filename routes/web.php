@@ -8,6 +8,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MejaController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\KasirController;
+use App\Http\Controllers\RiwayatController;
 
 // Route untuk Guest (Belum Login)
 Route::middleware('guest')->group(function () {
@@ -32,6 +33,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cashier/order/{id}/update', [KasirController::class, 'updateStatus'])->name('cashier.update');
     // Cetak Struk
     Route::get('/cashier/order/{id}/print', [KasirController::class, 'printStruk'])->name('cashier.print');
+    // Route Riwayat Transaksi
+    Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+    Route::get('/riwayat/{id}', [RiwayatController::class, 'show'])->name('riwayat.show');
 });
 
 // --- ROUTE PELANGGAN (PUBLIC) ---
