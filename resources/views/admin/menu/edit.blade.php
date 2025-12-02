@@ -59,8 +59,8 @@
                         </div>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary">Update Menu</button>
-                    <a href="{{ route('menu.index') }}" class="btn btn-secondary">Batal</a>
+                    <button type="submit" class="btn btn-danger">Update Menu</button>
+                    <a href="{{ route('menu.index') }}" class="btn btn-light">Batal</a>
                 </form>
             </div>
         </div>

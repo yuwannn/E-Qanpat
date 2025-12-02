@@ -39,6 +39,9 @@ class MenuController extends Controller
 
         $data = $request->all();
 
+        // Jika ada request 'tersedia', set 1. Jika tidak, set 0.
+        $data['tersedia'] = $request->has('tersedia') ? 1 : 0;
+
         // Logika Upload Gambar
         if ($request->hasFile('gambar')) {
             // Simpan ke folder: storage/app/public/menus
@@ -72,6 +75,9 @@ class MenuController extends Controller
 
         $menu = menu::findOrFail($id);
         $data = $request->all();
+
+        // Jika ada request 'tersedia', set 1. Jika tidak, set 0.
+        $data['tersedia'] = $request->has('tersedia') ? 1 : 0;
 
         // Cek jika ada gambar baru yang diupload
         if ($request->hasFile('gambar')) {

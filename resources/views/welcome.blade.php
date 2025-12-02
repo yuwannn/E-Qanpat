@@ -11,7 +11,7 @@
         /* Hero Section dengan Background Gelap Transparan */
         .hero-section {
             background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                        url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+                        url('storage/kanpat-2.jpeg');
             background-size: cover;
             background-position: center;
             height: 100vh; /* Full layar */
