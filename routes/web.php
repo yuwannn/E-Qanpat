@@ -46,6 +46,7 @@ Route::post('/cart/add', [OrderController::class, 'addToCart'])->name('cart.add'
 Route::get('/cart/view', [OrderController::class, 'showCart'])->name('cart.show');
 Route::post('/cart/checkout', [OrderController::class, 'checkout'])->name('cart.checkout');
 Route::get('/order/success/{id}', [OrderController::class, 'success'])->name('order.success');
+Route::post('/cart/decrease', [OrderController::class, 'decreaseItem'])->name('cart.decrease');
 
 Route::get('/', function () {
     return view('welcome');

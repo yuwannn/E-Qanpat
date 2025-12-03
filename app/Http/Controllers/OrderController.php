@@ -67,18 +67,53 @@ class OrderController extends Controller
         return response()->json([
             'success' => true, 
             'totalQty' => $totalQty, 
-            'totalPrice' => number_format($totalPrice, 0, ',', '.')
+            'totalPrice' => number_format($totalPrice, 0, ',', '.'),
+            'itemQty' => $cart[$id]['quantity']
         ]);
     }
 
-    // 2. LIHAT HALAMAN KERANJANG
+    // 2. KURANGI ITEM (AJAX)
+    public function decreaseItem(Request $request)
+    {
+        $id = $request->id;
+        $cart = session()->get('cart', []);
+
+        if(isset($cart[$id])) {
+            if($cart[$id]['quantity'] > 1) {
+                $cart[$id]['quantity']--;
+            } else {
+                unset($cart[$id]); // Hapus jika sisa 0
+            }
+            session()->put('cart', $cart);
+        }
+
+        // Hitung ulang total untuk respons JSON
+        $totalQty = 0;
+        $totalPrice = 0;
+        foreach(session('cart', []) as $item) { // Pakai session terbaru
+            $totalQty += $item['quantity'];
+            $totalPrice += $item['price'] * $item['quantity'];
+        }
+
+        // Kembalikan juga qty item spesifik ini agar JS bisa update angka di kartu
+        $currentItemQty = isset($cart[$id]) ? $cart[$id]['quantity'] : 0;
+
+        return response()->json([
+            'success' => true, 
+            'totalQty' => $totalQty, 
+            'totalPrice' => number_format($totalPrice, 0, ',', '.'),
+            'itemQty' => $currentItemQty // Data baru untuk update UI per item
+        ]);
+    }
+
+    // 3. LIHAT HALAMAN KERANJANG
     public function showCart()
     {
         $cart = session()->get('cart', []);
         return view('order.cart', compact('cart'));
     }
 
-    // 3. PROSES CHECKOUT
+    // 4. PROSES CHECKOUT
     public function checkout(Request $request)
     {
         $cart = session()->get('cart');
@@ -131,7 +166,7 @@ class OrderController extends Controller
         }
     }
 
-    // 4. HALAMAN SUKSES
+    // 5. HALAMAN SUKSES
     public function success($id)
     {
         $pesanan = pesanan::with('meja')->findOrFail($id);
