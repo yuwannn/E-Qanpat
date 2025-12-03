@@ -117,8 +117,25 @@
                         </div>
 
                         <div class="card-body p-3 d-flex flex-column">
-                            <h6 class="fw-bold mb-1 text-truncate" style="font-size: 14px;">{{ $menu->nama_menu }}</h6>
-                            <p class="text-muted small mb-2 text-truncate" style="font-size: 11px;">{{ $menu->deskripsi ?? 'Enak & Lezat' }}</p>
+                            <h6 class="fw-bold mb-1" 
+                                style="font-size: 14px; 
+                                    white-space: normal; 
+                                    line-height: 1.2; 
+                                    display: -webkit-box; 
+                                    -webkit-line-clamp: 2; /* Batasi maks 2 baris */
+                                    -webkit-box-orient: vertical; 
+                                    overflow: hidden; 
+                                    height: 34px;"> {{ $menu->nama_menu }}
+                            </h6>
+                            <p class="text-muted small mb-2" 
+                                style="font-size: 11px; 
+                                        white-space: normal; 
+                                        display: -webkit-box; 
+                                        -webkit-line-clamp: 2; 
+                                        -webkit-box-orient: vertical; 
+                                        overflow: hidden;">
+                                    {{ $menu->deskripsi ?? 'Enak & Lezat' }}
+                            </p>
                             
                             <div class="mt-auto d-flex justify-content-between align-items-center">
                                 <span class="fw-bold text-danger">Rp {{ number_format($menu->harga / 1000, 0) }}k</span>

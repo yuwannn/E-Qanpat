@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
     // 1. HALAMAN AWAL (SAAT SCAN QR)
-    public function index($nomor_meja)
+    public function index(Request $request, $nomor_meja)
     {
         // Cek apakah nomor meja valid (ada di database)
         $meja = meja::where('nomor_meja', $nomor_meja)->first();
@@ -22,9 +22,20 @@ class OrderController extends Controller
             return abort(404, 'Meja tidak ditemukan!');
         }
 
-        // Simpan nomor meja ke session user
+        // 2. KEAMANAN: Cek Token
+        // Ambil token dari URL (?token=...)
+        $tokenDariUrl = $request->query('token');
+
+        // Jika token di URL tidak sama dengan token di Database
+        // ATAU jika di database ada token tapi di URL kosong
+        if ($meja->token && $tokenDariUrl !== $meja->token) {
+            // Tampilkan Halaman Error 403 (Forbidden)
+            return abort(403, 'AKSES DITOLAK: Silakan scan QR Code asli yang ada di meja.');
+        }
+
+        // 3. Simpan ke session (agar user tidak perlu scan ulang kalau refresh)
         session(['nomor_meja' => $nomor_meja]);
-        session(['meja_id' => $meja->id]);
+        session(['meja_id' => $meja->id]);;
 
         // Ambil semua kategori beserta menunya yang 'tersedia'
         $kategoris = kategori::with(['menus' => function($query) {

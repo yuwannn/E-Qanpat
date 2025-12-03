@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\meja; // Huruf kecil sesuai model Anda
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Str;
 
 class MejaController extends Controller
 {
@@ -28,14 +29,18 @@ class MejaController extends Controller
             'nomor_meja' => 'required|unique:mejas,nomor_meja',
         ]);
 
-        // GANTI BAGIAN INI:
-        // Gunakan Link Production Railway secara eksplisit
+        // 1. Buat Token Rahasia Acak
+        $token = Str::random(32);
+
+        // 2. Masukkan Token ke URL QR
         $baseUrl = 'https://e-qanpat-production.up.railway.app';
-        $url_order = "{$baseUrl}/order/{$request->nomor_meja}";
+        // URL jadi: .../order/01?token=ajshd76as...
+        $url_order = "{$baseUrl}/order/{$request->nomor_meja}?token={$token}";
 
         Meja::create([
             'nomor_meja' => $request->nomor_meja,
-            'qr_code' => $url_order 
+            'qr_code' => $url_order ,
+            'token' => $token
         ]);
 
         return redirect()->route('meja.index')->with('success', 'Meja berhasil ditambahkan');
@@ -56,14 +61,18 @@ class MejaController extends Controller
         ]);
 
         $meja = Meja::findOrFail($id);
+
+        // Cek: Jika meja belum punya token (data lama), buatkan baru. 
+        // Jika sudah ada, pakai yang lama agar QR code fisik tidak berubah (kecuali Anda mau reset).
+        $token = $meja->token ?? Str::random(32);
         
-        // GANTI BAGIAN INI JUGA:
         $baseUrl = 'https://e-qanpat-production.up.railway.app';
-        $url_order = "{$baseUrl}/order/{$request->nomor_meja}";
+        $url_order = "{$baseUrl}/order/{$request->nomor_meja}?token={$token}";
 
         $meja->update([
             'nomor_meja' => $request->nomor_meja,
-            'qr_code' => $url_order
+            'qr_code' => $url_order,
+            'token' => $token
         ]);
 
         return redirect()->route('meja.index')->with('success', 'Meja berhasil diperbarui');
