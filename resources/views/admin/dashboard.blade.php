@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Overview Dashboard')
+@section('title', 'Dashboard')
 
 @section('content')
 <style>
@@ -104,10 +104,10 @@
 <div class="row mt-4">
     <div class="col-md-8 mb-4">
         <div class="card p-4 h-100 shadow-sm border-0">
-            <h5 class="fw-bold mb-3">Statistik Penjualan</h5>
-            <div class="d-flex align-items-center justify-content-center rounded" 
-                 style="height: 300px; background-color: var(--bg-body); border: 2px dashed var(--border-color);">
-                <p class="text-muted"><i class="fas fa-chart-line me-2"></i>Area Grafik Penjualan</p>
+            <h5 class="fw-bold mb-3">Statistik Penjualan (7 Hari)</h5>
+            
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="salesChart"></canvas>
             </div>
         </div>
     </div>
@@ -117,22 +117,106 @@
              style="background: linear-gradient(145deg, #1a1a1a, #000000);">
             <h5 class="fw-bold text-warning mb-4"><i class="fas fa-crown me-2"></i>Top Menu</h5>
             
-            <div class="d-flex align-items-center mb-4">
-                <h1 class="fw-bold me-3 text-white-50">1</h1>
-                <div>
-                    <h6 class="mb-1 text-white">Nasi Goreng Spesial</h6>
-                    <small class="text-warning"><i class="fas fa-star"></i> 50 Terjual</small>
-                </div>
-            </div>
-            
-            <div class="d-flex align-items-center mb-4">
-                <h1 class="fw-bold me-3 text-white-50">2</h1>
-                <div>
-                    <h6 class="mb-1 text-white">Es Teh Manis</h6>
-                    <small class="text-warning"><i class="fas fa-star"></i> 42 Terjual</small>
-                </div>
+            <div class="d-flex flex-column gap-3">
+                @forelse($top_menus as $index => $top)
+                    <div class="d-flex align-items-center">
+                        <h1 class="fw-bold me-3 text-white-50" style="width: 30px;">{{ $index + 1 }}</h1>
+                        
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1 text-white">{{ $top->menu->nama_menu ?? 'Menu Terhapus' }}</h6>
+                            <small class="text-warning">
+                                <i class="fas fa-star me-1"></i> {{ $top->total_terjual }} Terjual
+                            </small>
+                        </div>
+
+                        @if($top->menu && $top->menu->gambar)
+                            <img src="{{ asset('storage/' . $top->menu->gambar) }}" class="rounded-circle border border-secondary" width="40" height="40" style="object-fit: cover;">
+                        @endif
+                    </div>
+                    
+                    @if(!$loop->last)
+                        <hr class="border-secondary opacity-25 my-1">
+                    @endif
+                @empty
+                    <div class="text-center text-muted py-5">
+                        <i class="fas fa-ghost mb-2"></i><br>Belum ada data penjualan.
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        
+        // Ambil data dari Controller (Blade to JS)
+        const labels = @json($chartLabels);
+        const dataValues = @json($chartValues);
+
+        // Buat Gradient Merah untuk Grafik
+        let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(211, 47, 47, 0.5)'); // Merah Transparan atas
+        gradient.addColorStop(1, 'rgba(211, 47, 47, 0.0)'); // Putih/Transparan bawah
+
+        new Chart(ctx, {
+            type: 'line', // Jenis Grafik: Garis
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Omzet (Rp)',
+                    data: dataValues,
+                    backgroundColor: gradient,
+                    borderColor: '#D32F2F', // Warna Garis Merah Kanpat
+                    borderWidth: 3,
+                    pointBackgroundColor: '#FFC107', // Titik warna Kuning
+                    pointBorderColor: '#fff',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    fill: true, // Isi warna di bawah garis
+                    tension: 0.4 // Garis melengkung (estetik)
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }, // Sembunyikan legenda biar bersih
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleColor: '#FFC107',
+                        callbacks: {
+                            label: function(context) {
+                                // Format Rupiah di Tooltip
+                                let value = context.raw;
+                                return ' Rp ' + value.toLocaleString('id-ID');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.05)' }, // Grid halus
+                        ticks: {
+                            callback: function(value) {
+                                // Singkat angka (misal 15000 jadi 15k)
+                                if (value >= 1000) return 'Rp ' + (value/1000) + 'k';
+                                return value;
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false } // Hilangkan grid vertikal
+                    }
+                }
+            }
+        });
+    });
+</script>
 @endsection
