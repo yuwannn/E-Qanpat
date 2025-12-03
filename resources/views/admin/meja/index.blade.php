@@ -23,7 +23,7 @@
             <div class="col-md-3 mb-4">
                 <div class="card h-100 text-center border-left-primary shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title font-weight-bold">Meja {{ $item->nomor_meja }}</h5>
+                        <h5 class="card-title font-weight-bold text-primary">Meja {{ $item->nomor_meja }}</h5>
                         
                         <div class="my-3 d-flex justify-content-center">
                             {!! QrCode::size(120)->generate($item->qr_code) !!}

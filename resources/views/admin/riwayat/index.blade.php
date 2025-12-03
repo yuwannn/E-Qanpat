@@ -12,11 +12,11 @@
         <form action="{{ route('riwayat.index') }}" method="GET" class="mb-4">
             <div class="row align-items-end">
                 <div class="col-md-3">
-                    <label class="form-label small fw-bold">Dari Tanggal</label>
+                    <label class="form-label small fw-bold text-primary">Dari Tanggal</label>
                     <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}">
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label small fw-bold">Sampai Tanggal</label>
+                    <label class="form-label small fw-bold text-primary">Sampai Tanggal</label>
                     <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}">
                 </div>
                 <div class="col-md-2">

@@ -257,7 +257,7 @@
                     <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&background=D32F2F&color=fff&bold=true" class="rounded-circle" width="40">
                 </div>
 
-                <button type="button" class="btn btn-logout p-0" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                <button type="button" class="btn btn-logout p-0 text-primary" data-bs-toggle="modal" data-bs-target="#logoutModal">
                     <i class="fas fa-sign-out-alt me-2"></i> Logout
                 </button>
             </div>
