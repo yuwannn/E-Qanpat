@@ -19,22 +19,23 @@ class MejaController extends Controller
     public function create()
     {
         return view('admin.meja.create');
-    }
+    } 
 
-    // 3. SIMPAN MEJA
+    // 1. UPDATE LOGIKA SIMPAN (STORE)
     public function store(Request $request)
     {
         $request->validate([
             'nomor_meja' => 'required|unique:mejas,nomor_meja',
         ]);
 
-        // Kita generate string unik untuk QR Code, misalnya URL login meja
-        // Nanti user scan ini langsung masuk ke menu
-        $url_order = url("/order/{$request->nomor_meja}");
+        // GANTI BAGIAN INI:
+        // Gunakan Link Production Railway secara eksplisit
+        $baseUrl = 'https://e-qanpat-production.up.railway.app';
+        $url_order = "{$baseUrl}/order/{$request->nomor_meja}";
 
-        meja::create([
+        Meja::create([
             'nomor_meja' => $request->nomor_meja,
-            'qr_code' => $url_order // Kita simpan isi URL-nya di database
+            'qr_code' => $url_order 
         ]);
 
         return redirect()->route('meja.index')->with('success', 'Meja berhasil ditambahkan');
@@ -47,17 +48,18 @@ class MejaController extends Controller
         return view('admin.meja.edit', compact('meja'));
     }
 
-    // 5. UPDATE MEJA
+    // 2. UPDATE LOGIKA EDIT (UPDATE)
     public function update(Request $request, $id)
     {
         $request->validate([
             'nomor_meja' => 'required|unique:mejas,nomor_meja,' . $id,
         ]);
 
-        $meja = meja::findOrFail($id);
+        $meja = Meja::findOrFail($id);
         
-        // Update URL QR jika nomor meja berubah
-        $url_order = url("/order/{$request->nomor_meja}");
+        // GANTI BAGIAN INI JUGA:
+        $baseUrl = 'https://e-qanpat-production.up.railway.app';
+        $url_order = "{$baseUrl}/order/{$request->nomor_meja}";
 
         $meja->update([
             'nomor_meja' => $request->nomor_meja,
