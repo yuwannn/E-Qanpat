@@ -156,7 +156,7 @@ class OrderController extends Controller
             // Simpan ke Tabel Detail Pesanans
             foreach($cart as $id => $details) {
                 // Perhatikan: Model detail_pesanan atau detail_pesanan (sesuaikan nama class Anda)
-                \App\Models\detail_pesanan::create([
+                detail_pesanan::create([
                     'pesanan_id' => $pesanan->id,
                     'menu_id' => $id,
                     'jumlah' => $details['quantity'],
